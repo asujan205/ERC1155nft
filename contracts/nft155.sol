@@ -51,7 +51,7 @@ function CreateMarketItem ( uint256 nftId, uint256 amount, uint256 price, uint25
     
    _safeTransferFrom(msg.sender, address(this), nftId, amount, "");
 }
-
+//Fetching the nfts
 function FetchMarketItem() public view returns (NftMarketItem[] memory){
     uint256 itemCount = _tokenIds.current();
     uint256 unsoldItemCount = itemCount - _isSold.current();
@@ -72,6 +72,7 @@ function FetchMarketItem() public view returns (NftMarketItem[] memory){
 
 
 }
+//fetch the nfts you buyed
 function FetchMyItem() public view returns (NftMarketItem[] memory){
     uint256 itemCount = _tokenIds.current();
     uint256 unsoldItemCount = itemCount - _isSold.current();
@@ -90,6 +91,8 @@ function FetchMyItem() public view returns (NftMarketItem[] memory){
     }
     return items;
 }
+//fetchNfts you listed
+
  function fetchItemListed() public view returns (NftMarketItem[] memory){
     uint256 itemCount = _tokenIds.current();
     uint256 unsoldItemCount = itemCount - _isSold.current();
@@ -110,6 +113,24 @@ function FetchMyItem() public view returns (NftMarketItem[] memory){
 
 
  }
+//buying the nfts
+function BuyNfts(uint256 TokenId,uint256 _amounts)public payable{
+    require(TokenId > 0 && TokenId <= _tokenIds.current(), "Token ID does not exist");
+    NftMarketItem storage item = marketItem[TokenId];
+    require(item.isSold == false, "Item is already sold");
+    require(item.amount == _amounts, "Item is not available");
+    require(msg.value >= item.price, "Not enough Ether");
+    uint256 royalty = (item.price * item.royalty) / deno;
+    uint256 marketfee= (item.price * platformFee) / deno;
+    uint256 sellerProceeds = item.price - (royalty + platformFee);
+    item.seller.transfer(sellerProceeds);
+    payable(owner()).transfer(marketfee);
+    item.owner = payable(msg.sender);
+    item.isSold = true;
+    _isSold.increment();
+    _safeTransferFrom(address(this), msg.sender, item.nftId, item.amount, "");
+
+}
 
 
     
