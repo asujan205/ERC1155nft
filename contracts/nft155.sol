@@ -12,9 +12,28 @@ constructor ()ERC1155("") {}
 using Counters for Counters.Counter;
 Counters.Counter private _tokenIds;
 Counters.Counter private _isSold;
+ERC1155 private _nft;
+address private _owner;
+ uint256 private platformFee = 25;
+uint256 private deno = 1000;
 
+
+struct  NftMarketItemP{
+
+    uint256 id;
+    uint256 nftId;
+    uint256 amount;
+    uint256 price;
+    uint256 royalty;
+    address payable seller;
+    address payable owner;
+    bool isSold;
+}
 function _setURI(string memory newuri) internal virtual override  onlyOwner{
     _setURI(newuri);
+}
+function MintNfts() public {
+
 }
 
     
