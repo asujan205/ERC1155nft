@@ -50,6 +50,27 @@ function CreateMarketItem ( uint256 nftId, uint256 amount, uint256 price, uint25
    _safeTransferFrom(msg.sender, address(this), nftId, amount, "");
 }
 
+function FetchMarketItem() public view returns (NftMarketItem[] memory){
+    uint256 itemCount = _tokenIds.current();
+    uint256 unsoldItemCount = itemCount - _isSold.current();
+    uint256 currentIndex = 0;
+    NftMarketItem[] memory items = new NftMarketItem[](unsoldItemCount);
+    for (uint256 i = 0; i < itemCount; i++) {
+        if (marketItem[i + 1].id == 0) {
+            continue;
+        }
+        NftMarketItem storage currentItem = marketItem[i + 1];
+        if (currentItem.isSold == false) {
+            uint256 currentId = currentIndex;
+            items[currentId] = currentItem;
+            currentIndex += 1;
+        }
+    }
+    return items;
+
+
+}
+
 
     
 }
