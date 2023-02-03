@@ -13,7 +13,7 @@ using Counters for Counters.Counter;
 Counters.Counter private _tokenIds;
 Counters.Counter private _isSold;
 
-function _setURI(string memory newuri) public  onlyOwner{
+function _setURI(string memory newuri) internal virtual override  onlyOwner{
     _setURI(newuri);
 }
 
