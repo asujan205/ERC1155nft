@@ -36,8 +36,18 @@ function _setURI(string memory newuri) internal virtual override  onlyOwner{
 
 function MintNfts(uint256 tokenId,uint256 _amount) public {
     _mint(msg.sender, tokenId, _amount, "");
-    _tokenIds.increment();
+    
 
+}
+function CreateMarketItem ( uint256 nftId, uint256 amount, uint256 price, uint256 royalty) public {
+    require(price > 0, "Price must be at least 1 wei");
+    require(royalty > 0, "Royalty must be at least 1 wei");
+    _tokenIds.increment();
+    uint256 itemId = _tokenIds.current();
+    marketItem[itemId] = NftMarketItem(itemId, nftId, amount, price, royalty, 
+    payable(msg.sender), payable(address(0)), false);
+    
+   _safeTransferFrom(msg.sender, address(this), nftId, amount, "");
 }
 
 
