@@ -8,11 +8,15 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 contract MyMarketPlace is ERC1155,Ownable{
-constructor ()ERC1155("") {}
+    IERC1155 private _nft;
+
+  constructor(address _nftContract) ERC1155("") {
+        _nft = IERC1155(_nftContract);
+    }
 using Counters for Counters.Counter;
 Counters.Counter private _tokenIds;
 Counters.Counter private _isSold;
-ERC1155 private _nft;
+
 address private _owner;
  uint256 private platformFee = 25;
 uint256 private deno = 1000;
@@ -49,7 +53,7 @@ function CreateMarketItem ( uint256 nftId, uint256 amount, uint256 price, uint25
     marketItem[itemId] = NftMarketItem(itemId, nftId, amount, price, royalty, 
     payable(msg.sender), payable(address(0)), false);
     
-   _safeTransferFrom(msg.sender, address(this), nftId, amount, "");
+    _safeTransferFrom(msg.sender, address(this), nftId, amount, "");
 }
 //Fetching the nfts
 function FetchMarketItem() public view returns (NftMarketItem[] memory){
