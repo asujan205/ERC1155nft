@@ -82,7 +82,7 @@ function FetchMyItem() public view returns (NftMarketItem[] memory){
             continue;
         }
         NftMarketItem storage currentItem = marketItem[i + 1];
-        if (currentItem.isSold == false && currentItem.seller == msg.sender) {
+        if (currentItem.owner == msg.sender) {
             uint256 currentId = currentIndex;
             items[currentId] = currentItem;
             currentIndex += 1;
@@ -90,6 +90,26 @@ function FetchMyItem() public view returns (NftMarketItem[] memory){
     }
     return items;
 }
+ function fetchItemListed() public view returns (NftMarketItem[] memory){
+    uint256 itemCount = _tokenIds.current();
+    uint256 unsoldItemCount = itemCount - _isSold.current();
+    uint256 currentIndex = 0;
+    NftMarketItem[] memory items = new NftMarketItem[](unsoldItemCount);
+    for (uint256 i = 0; i < itemCount; i++) {
+        if (marketItem[i + 1].id == 0) {
+            continue;
+        }
+        NftMarketItem storage currentItem = marketItem[i + 1];
+        if (currentItem.seller == msg.sender) {
+            uint256 currentId = currentIndex;
+            items[currentId] = currentItem;
+            currentIndex += 1;
+        }
+    }
+    return items;
+
+
+ }
 
 
     
