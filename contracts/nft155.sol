@@ -18,7 +18,7 @@ address private _owner;
 uint256 private deno = 1000;
 
 
-struct  NftMarketItemP{
+struct  NftMarketItem{
 
     uint256 id;
     uint256 nftId;
@@ -29,12 +29,17 @@ struct  NftMarketItemP{
     address payable owner;
     bool isSold;
 }
+mapping(uint256 => NftMarketItem) private marketItem;
 function _setURI(string memory newuri) internal virtual override  onlyOwner{
     _setURI(newuri);
 }
-function MintNfts() public {
+
+function MintNfts(uint256 tokenId,uint256 _amount) public {
+    _mint(msg.sender, tokenId, _amount, "");
+    _tokenIds.increment();
 
 }
+
 
     
 }
